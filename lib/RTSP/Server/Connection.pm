@@ -115,6 +115,7 @@ sub teardown {
     my ($self) = @_;
 
     $self->clear_session;
+    $self->push_ok;
 }
 
 sub describe {
