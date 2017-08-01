@@ -9,6 +9,9 @@ use RTSP::Server::Logger;
 use RTSP::Server::Source;
 use RTSP::Server::Client;
 
+use Sys::Syslog;
+use Sys::Syslog qw(:DEFAULT setlogsock); 
+
 our $VERSION = '0.06';
 our $RTP_START_PORT = 20_000;
 
@@ -133,6 +136,9 @@ sub listen {
     my ($self) = @_;
 
     print "Starting RTSP server, log level = " . $self->log_level . "\n";
+    openlog("rtsp-server.pl", "pid", "user");
+    syslog("info", "Starting RTSP server, log level = " . $self->log_level . "\n");
+    closelog();
 
     my $source_server = $self->start_source_server;
     my $client_server = $self->start_client_server;

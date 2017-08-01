@@ -2,6 +2,8 @@ package RTSP::Server::Logger;
 
 use Moose;
 use namespace::autoclean;
+use Sys::Syslog;
+use Sys::Syslog qw(:DEFAULT setlogsock);
 
 has 'log_level' => (
     is => 'rw',
@@ -17,9 +19,15 @@ sub log {
     if ($level > 2) {
         # info/debug go to stdout
         print "$msg\n";
+	openlog("rtsp-server.pl", "pid", "user");
+	syslog("info", "$msg\n");
+	closelog();
     } else {
         # warn/error go to stderr
         warn "$msg\n";
+	openlog("rtsp-server.pl", "pid", "user");
+	syslog("warn", "$msg\n");
+	closelog();
     }
 }
 
